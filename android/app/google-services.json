@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "86221482868",
+    "project_id": "loginrs-fa856",
+    "storage_bucket": "loginrs-fa856.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86221482868:android:0060105ab3cdfdccd85a21",
+        "android_client_info": {
+          "package_name": "com.example.login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86221482868-a3l3ajf4f4jvrm0naqhuj5jb7eokaqf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpcFpuF8jwtgweCbRjPhC7SPZFCTZDn2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86221482868-a3l3ajf4f4jvrm0naqhuj5jb7eokaqf2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

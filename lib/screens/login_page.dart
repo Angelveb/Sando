@@ -4,18 +4,75 @@ import 'package:login/componentes/my_button.dart';
 import 'package:login/componentes/my_text_field.dart';
 import 'package:login/componentes/square_tile.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   // Controladores para el texto
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   // Autenticacion del usuario
   void signUserIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+
+    // Mostrar circulo de carga
+    showDialog(
+      context: context,
+      builder: (context) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+     }
+    );
+
+    // try sign in
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
+      );
+      // desaparecer circulo de carga
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // desaparecer circulo de carga
+      Navigator.pop(context);
+      // usuario incorrecto
+      if (e.code == 'user-not-found'){
+        // mostrar error de usuario
+        wrongEmailMessage();
+      }
+      // Constraseña incorrecta
+      else if (e.code == 'contraseña-incorrecta') { 
+      }
+    } 
+    }
+
+  // Mensaje de correo incorrecto
+  void wrongEmailMessage(){
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return const AlertDialog(
+           title: Text('Correo incorrecto'),
+          );
+      }
+      );
+  }
+
+  // Mensaje de contraseña incorrecta
+  void wrongPasswordMessage(){
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Contraseña incorrecta'),
+          );
+      }
       );
   }
 

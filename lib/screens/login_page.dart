@@ -5,7 +5,7 @@ import 'package:login/componentes/my_text_field.dart';
 import 'package:login/componentes/square_tile.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -32,22 +32,23 @@ class _LoginPageState extends State<LoginPage> {
 
     // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
       );
       // desaparecer circulo de carga
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // desaparecer circulo de carga
       Navigator.pop(context);
       // usuario incorrecto
-      if (e.code == 'user-not-found'){
-        // mostrar error de usuario
+      if (e.code == 'Usuario incorrecto'){
         wrongEmailMessage();
       }
       // Constraseña incorrecta
-      else if (e.code == 'contraseña-incorrecta') { 
+      else if (e.code == 'Contraseña incorrecta') { 
+        wrongPasswordMessage();
       }
     } 
     }
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body:  SafeArea( 
         child: Center(
           child: Column(
@@ -94,7 +95,17 @@ class _LoginPageState extends State<LoginPage> {
               size: 100,
               ),
 
-              const SizedBox(height: 50),           
+              const SizedBox(height: 13),           
+
+              // Titulo de la app
+              const Text('SANDRO',
+              style: TextStyle(
+              color:Colors.teal,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              ),
+              ),
+              const SizedBox(height: 30),   
 
               // Bienvenido de nuevo
 
@@ -114,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                 obscuredText: false,
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 14),
 
               // contraseña
 
@@ -194,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
               ),
 
-               const SizedBox(height: 50),
+               const SizedBox(height: 40),
               
               // Registrarse ahora
               

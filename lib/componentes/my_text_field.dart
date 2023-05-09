@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final controller;
   final String hintText;
   final bool obscuredText;
@@ -24,15 +25,14 @@ class MyTextField extends StatelessWidget {
                       borderSide: BorderSide(color: Colors.white),
                       ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade400), 
+                      borderSide: BorderSide(color: Colors.teal), 
                       ),
                      fillColor: Colors.grey.shade200,
                      filled: true,
                      hintText: hintText,
-                     hintStyle: TextStyle(color: Colors.grey.shade500),
+                     hintStyle: TextStyle(color: Colors.teal),
                   ),
                 ),
               );
-    
   }
 }

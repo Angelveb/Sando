@@ -19,7 +19,7 @@ void signUserOut() {
           onPressed: signUserOut, icon: const Icon(Icons.logout))],
       ),
       body:  Center(
-        child: Text('Enlazado con: ' + user.email!,
+        child: Text('Enlazado con: ${user.email!}',
         style: const TextStyle(fontSize: 20),
         ),
         ),

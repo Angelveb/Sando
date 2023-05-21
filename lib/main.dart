@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login/screens/auth_page.dart';
+import 'package:login/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -13,13 +13,17 @@ void main() async {
  }
 
  class MyApp extends StatelessWidget{
+  
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
+      theme: ThemeData(appBarTheme: AppBarTheme(
+      color: Colors.teal[300],)
+      ),
+      home: const AuthPage(),
     );
   }
  }

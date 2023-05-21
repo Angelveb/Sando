@@ -5,22 +5,22 @@ import 'package:login/componentes/my_text_field.dart';
 import 'package:login/componentes/square_tile.dart';
 import 'package:login/services/auth.service.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const RegisterPage({super.key, required this.onTap});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   // Controladores para el texto
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   // Autenticacion del usuario
-  void signUserIn() async {
+  void signUserUp() async {
 
     // Mostrar circulo de carga
     showDialog(
@@ -34,10 +34,15 @@ class _LoginPageState extends State<LoginPage> {
 
     // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      if (passwordController.text == confirmPasswordController.text){
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
       );
+      } else { 
+        //Error mensaje
+        ("Las Contraseñas no coinciden");
+      }
       // desaparecer circulo de carga
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -84,6 +89,17 @@ class _LoginPageState extends State<LoginPage> {
       );
   }
 
+  void showErrorMessage(){
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Contraseñas no coinciden'),
+          );
+      }
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,14 +112,14 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const  SizedBox(height: 50),
+                const  SizedBox(height: 25),
                   
                 // logo 
                 const Icon(Icons.reddit,
-                size: 100,
+                size: 50,
                 ),
           
-                const SizedBox(height: 13),           
+                const SizedBox(height: 25),           
           
                 // Titulo de la app
                 const Text('SANDRO',
@@ -115,9 +131,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 30),   
           
-                // Bienvenido de nuevo
+                // Se va a crear una cuenta
           
-                Text('Bienvenido de nuevo te hemos extrañado',
+                Text('Vamos a crear una cuenta',
                 style: TextStyle(color:Colors.grey[700],
                 fontSize: 16,
                 ),
@@ -135,8 +151,7 @@ class _LoginPageState extends State<LoginPage> {
           
                 const SizedBox(height: 14),
           
-                // contraseña
-          
+                // contraseña         
                 MyTextField(
                   controller: passwordController,
                   hintText: 'Contraseña',
@@ -144,6 +159,15 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               
                 const SizedBox(height: 10),
+
+                // repetir contraseña         
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirmar Contraseña',
+                  obscuredText: true,
+                ),
+              
+                const SizedBox(height: 10), 
                 
                 // olvido la contraseña
                 
@@ -152,8 +176,8 @@ class _LoginPageState extends State<LoginPage> {
                 // Botono de iniciar sesion
           
                 MyButton(
-                  text: ('Iniciar'),
-                  onTap: signUserIn,
+                  text: "Registrarse",
+                  onTap: signUserUp,
                 ),
           
                 const SizedBox(height: 50),
@@ -189,39 +213,36 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 50),
                 
                 // iniciar con botones google / apple
-                 Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                   //boton google
                   SquareTile(
                     onTap: () => AuthService().signInWithGoogle(),
-                    imagePath: 'lib/imagenes/google.png'
-                    ),
+                    imagePath: 'lib/imagenes/google.png'),
           
-                  SizedBox(width: 25),
+                  const SizedBox(width: 25),
           
                   //boton apple
                   SquareTile(
-                    onTap: (){},
-                    imagePath: 'lib/imagenes/apple.png'
-                    ),
+                    onTap: () {} ,
+                    imagePath: 'lib/imagenes/apple.png'),
                 ],
                 ),
           
                  const SizedBox(height: 40),
                 
-                // Registrarse ahora
-                
+                // Registrarse ahora                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('No está registrado?',
+                    Text('Ya tiene una cuenta?',
                     style: TextStyle(color: Colors.grey[700]),
                       ),
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: const Text('Registrese ahora',
+                      child: const Text('Inicie ahora',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold),

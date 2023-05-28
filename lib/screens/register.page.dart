@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login/componentes/my_button.dart';
@@ -15,8 +16,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   // Controladores para el texto
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
   // Autenticacion del usuario
@@ -25,40 +26,59 @@ class _RegisterPageState extends State<RegisterPage> {
     // Mostrar circulo de carga
     showDialog(
       context: context,
-      builder: (context) {
-      return const Center(
+      builder: (context) => const Center(
         child: CircularProgressIndicator(),
-      );
-     }
+      ),
     );
 
-    // try sign in
-    try {
-      if (passwordController.text == confirmPasswordController.text){
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-      );
-      } else { 
-        //Error mensaje
-        ("Las Contraseñas no coinciden");
-      }
-      // desaparecer circulo de carga
+    // make sure passwords match
+    if (passwordTextController.text != confirmPasswordController.text) {
+      // pop loading circle
       Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // desaparecer circulo de carga
-      Navigator.pop(context);
-      // usuario incorrecto
-      if (e.code == 'user-not-found'){
-        //print('Usuario incorrecto');
-        wrongEmailMessage();
-      }
-      // Constraseña incorrecta
-      else if (e.code == 'wrong-password') { 
-        wrongPasswordMessage();
-      }
-    } 
+      // show erro to user
+      displayMessage("Contraseñas no coinciden");
+      return;
     }
+
+    // try creating the user
+    try {
+      // create the user
+      UserCredential userCredential =
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailTextController.text,
+      password: passwordTextController.text,
+      );
+
+      // after creatign the user, create a new document in cloud ifrestore called users
+      FirebaseFirestore.instance
+      .collection("Users")
+      .doc(userCredential.user!.email)
+      .set({
+        'username': emailTextController.text.split('@')[0], // initial username
+        'bio': 'Biografía vacía..' // Initially biografia vacia
+        // add any additional fields as needed     
+      });
+
+      // pop loading circle
+      if (context.mounted) Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      // pop loading circle
+      Navigator.pop(context);
+      // show error to user
+      displayMessage(e.code);
+    }
+  }
+  
+  // display a dialog message
+  void displayMessage(String message) {
+    showDialog(
+      context: context, 
+      builder: (context) => AlertDialog(
+        title: Text(message),
+      ));
+  }
+
+
 
   // Mensaje de correo incorrecto
   void wrongEmailMessage(){
@@ -115,16 +135,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 const  SizedBox(height: 25),
                   
                 // logo 
-                const Icon(Icons.reddit,
-                size: 50,
-                ),
+                ClipOval(
+                    child: SizedBox(
+                      height: 120.0,
+                      width: 120.0,
+                      child: Image.asset('lib/imagenes/sando.jpeg'),
+                    ),
+                  ),
           
-                const SizedBox(height: 25),           
+                const SizedBox(height: 13),           
           
                 // Titulo de la app
-                const Text('SANDRO',
+                const Text('SANDO',
                 style: TextStyle(
-                color:Colors.teal,
+                color: Color(0xFF592a2f),
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 ),
@@ -144,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Correo electronico texfield
           
                 MyTextField(
-                  controller: emailController,
+                  controller: emailTextController,
                   hintText: 'Correo',
                   obscuredText: false,
                 ),
@@ -153,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
           
                 // contraseña         
                 MyTextField(
-                  controller: passwordController,
+                  controller: passwordTextController,
                   hintText: 'Contraseña',
                   obscuredText: true,
                 ),
@@ -230,7 +254,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
                 ),
           
-                 const SizedBox(height: 40),
+                 const SizedBox(height: 20),
                 
                 // Registrarse ahora                
                 Row(
@@ -250,6 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 20),
               ],
               ),
           ),

@@ -88,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      
       backgroundColor: Colors.white,
       body:  SafeArea( 
         child: Center(
@@ -96,19 +95,23 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const  SizedBox(height: 50),
+                const  SizedBox(height: 8),
                   
                 // logo 
-                const Icon(Icons.reddit,
-                size: 100,
-                ),
+                ClipOval(
+                    child: SizedBox(
+                      height: 120.0,
+                      width: 120.0,
+                      child: Image.asset('lib/imagenes/sando.jpeg'),
+                    ),
+                  ),
           
                 const SizedBox(height: 13),           
           
                 // Titulo de la app
-                const Text('SANDRO',
+                const Text('SANDO',
                 style: TextStyle(
-                color:Colors.teal,
+                color: Color(0xFF592a2f),
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 ),
@@ -198,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                     imagePath: 'lib/imagenes/google.png'
                     ),
           
-                  SizedBox(width: 25),
+                  const SizedBox(width: 25),
           
                   //boton apple
                   SquareTile(
@@ -215,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('No está registrado?',
+                    Text('¿No está registrado?',
                     style: TextStyle(color: Colors.grey[700]),
                       ),
                     const SizedBox(width: 4),
